@@ -7,7 +7,7 @@
 # https://learnxinyminutes.com/docs/yaml/
 
 title: Futurifai Blog
-description: Blog posts related to data scienece and machine learning in real life.
+description: Blog posts related to data scienece and machine learning for real life.
 github_username: rasitabay
 # you can comment the below line out if your repo name is not different than your baseurl
 github_repo: "blog"
