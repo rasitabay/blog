@@ -4,4 +4,4 @@ title: About Me
 permalink: /about/
 ---
 
-![Figure 1](me.jpg)
+![Figure 1](me.jpeg)
