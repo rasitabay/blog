@@ -217,7 +217,8 @@ window.onload = wrap_img;
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>There are two neural networks in Manhattan-LSTM model, and they share weights [4]. The model utilizes LSTM to read the features that are derived from CDMs. Then, the similarity score between the input pairs is computed by using the similarity function $g = exp(-|h_{a}-h_{b}|_{1})$ (Figure 4). The LSTM is chosen because it allows variable lengths (to allow missing data to be included) as inputs, and this is not because the inputs are time-series. The total number of pairs for training is 1 million (normal-abnormal), and 10000 pairs are prepared for validation.</p>
 <p><img src="/blog/images/copied_from_nb/my_icons/manhattan_lstm_collision.png" alt="Figure 1"></p>
@@ -294,8 +295,7 @@ window.onload = wrap_img;
 </tr>
 </tbody>
 </table>
-<p></p>
-<center>Table 1 : Features selected as inputs for Manhattan-LSTM.&lt;/p&gt;
+<center>Table 1 : Features selected as inputs for Manhattan-LSTM.</center>
 <p>Table 2 shows the hyperparameters that are used to train the Manhattan-LSTM.</p>
 <table>
 <thead>
@@ -331,12 +331,10 @@ window.onload = wrap_img;
 </tr>
 </tbody>
 </table>
-<p></p>
-<center>Table 2 : The hyperparameters that are used to train the Manhattan-LSTM.&lt;/p&gt;
-
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
+<center>Table 2 : The hyperparameters that are used to train the Manhattan-LSTM.</center>
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -1070,14 +1068,8 @@ window.onload = wrap_img;
 </div>
     
 
-&lt;/div&gt;
- 
+</div>
 
-</center>
-</center>
-</div>
-</div></div>
-</div>
 
 
   </div><!-- from https://github.com/utterance/utterances -->
