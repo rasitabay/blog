@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Two-Line Element Estimation Using Machine Learning | Futurifai Blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Two-Line Element Estimation Using Machine Learning" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A demo for TLE estimation using machine learning." />
+<meta property="og:description" content="A demo for TLE estimation using machine learning." />
+<link rel="canonical" href="https://rasitabay.github.io/blog/two-line%20elements/mean%20elements/tle/estimation/machine%20learning/2020/04/20/two-line-elemets-machine-learning.html" />
+<meta property="og:url" content="https://rasitabay.github.io/blog/two-line%20elements/mean%20elements/tle/estimation/machine%20learning/2020/04/20/two-line-elemets-machine-learning.html" />
+<meta property="og:site_name" content="Futurifai Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-20T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"A demo for TLE estimation using machine learning.","dateModified":"2020-04-20T00:00:00-05:00","datePublished":"2020-04-20T00:00:00-05:00","headline":"Two-Line Element Estimation Using Machine Learning","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://rasitabay.github.io/blog/two-line%20elements/mean%20elements/tle/estimation/machine%20learning/2020/04/20/two-line-elemets-machine-learning.html"},"url":"https://rasitabay.github.io/blog/two-line%20elements/mean%20elements/tle/estimation/machine%20learning/2020/04/20/two-line-elemets-machine-learning.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://rasitabay.github.io/blog/feed.xml" title="Futurifai Blog" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Two-Line Element Estimation Using Machine Learning | Futurifai Blog</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Two-Line Element Estimation Using Machine Learning" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A demo for TLE estimation using machine learning." />
+<meta property="og:description" content="A demo for TLE estimation using machine learning." />
+<link rel="canonical" href="https://rasitabay.github.io/blog/two-line%20elements/mean%20elements/tle/estimation/machine%20learning/2020/04/20/two-line-elemets-machine-learning.html" />
+<meta property="og:url" content="https://rasitabay.github.io/blog/two-line%20elements/mean%20elements/tle/estimation/machine%20learning/2020/04/20/two-line-elemets-machine-learning.html" />
+<meta property="og:site_name" content="Futurifai Blog" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-20T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"A demo for TLE estimation using machine learning.","dateModified":"2020-04-20T00:00:00-05:00","datePublished":"2020-04-20T00:00:00-05:00","headline":"Two-Line Element Estimation Using Machine Learning","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://rasitabay.github.io/blog/two-line%20elements/mean%20elements/tle/estimation/machine%20learning/2020/04/20/two-line-elemets-machine-learning.html"},"url":"https://rasitabay.github.io/blog/two-line%20elements/mean%20elements/tle/estimation/machine%20learning/2020/04/20/two-line-elemets-machine-learning.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://rasitabay.github.io/blog/feed.xml" title="Futurifai Blog" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"> </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement( document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "[%", right: "%]", display: true},
+            {left: "$", right: "$", display: false}
+        ]}
+        );
+    });
+    </script>
+
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">Futurifai Blog</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About Me</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Two-Line Element Estimation Using Machine Learning</h1><p class="page-description">A demo for TLE estimation using machine learning.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-04-20T00:00:00-05:00" itemprop="datePublished">
+        Apr 20, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      18 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#Two-line elements">Two-line elements</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#Mean elements">Mean elements</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#TLE">TLE</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#Estimation">Estimation</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#Machine Learning">Machine Learning</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/rasitabay/blog/tree/master/_notebooks/2020-04-20-two-line-elemets-machine-learning.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/rasitabay/blog/master?filepath=_notebooks%2F2020-04-20-two-line-elemets-machine-learning.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/rasitabay/blog/blob/master/_notebooks/2020-04-20-two-line-elemets-machine-learning.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#1.-Introduction">1. Introduction </a></li>
+<li class="toc-entry toc-h2"><a href="#2.-Background">2. Background </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#2.1-Two-Line-Elements">2.1 Two-Line Elements </a></li>
+<li class="toc-entry toc-h3"><a href="#2.2-Two-Line-Element-Estimation-Methods">2.2 Two-Line Element Estimation Methods </a></li>
+<li class="toc-entry toc-h3"><a href="#2.3-Machine-Learning">2.3 Machine Learning </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#3.-Methods">3. Methods </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#3.1-Monte-Carlo-approach">3.1 Monte-Carlo approach </a></li>
+<li class="toc-entry toc-h3"><a href="#3.2-Machine-Learning-Assisted-Estimation">3.2 Machine Learning Assisted Estimation </a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#3.2.1-Feature-Selection">3.2.1 Feature Selection </a></li>
+<li class="toc-entry toc-h4"><a href="#3.2.2-Boosting-Trees">3.2.2 Boosting Trees </a></li>
+<li class="toc-entry toc-h4"><a href="#3.2.3-Deep-Learning">3.2.3 Deep Learning </a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#4.-Results">4. Results </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#4.1-Monte-Carlo-Approach">4.1 Monte-Carlo Approach </a></li>
+<li class="toc-entry toc-h3"><a href="#4.2-Machine-Learning-Assisted-TLE-Estimation">4.2 Machine Learning Assisted TLE Estimation </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#5.-References">5. References </a></li>
+<li class="toc-entry toc-h2"><a href="#6.-Code">6. Code </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-04-20-two-line-elemets-machine-learning.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="1.-Introduction">
+<a class="anchor" href="#1.-Introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Introduction<a class="anchor-link" href="#1.-Introduction"> </a>
+</h2>
+<p>Two-line elements are widely used for space operations to predict the orbit with a moderate accuracy for 2-3 days. Local optimization methods, such as the nonlinear least squares method with differential corrections, can estimate a TLE as long as there exists an initial estimate that provides the desired precision. Global optimization methods to estimate TLEs are computationally intensive, and estimating a large number of them is prohibitive. In this paper, the feasibility of estimating TLEs using machine learning methods is investigated. First, a Monte-Carlo approach to estimate a TLE, when there are no initial estimates that provide the desired precision, is introduced. The proposed Monte-Carlo method is shown to estimate TLEs with root mean square errors below 1 km for space objects with varying area-to-mass ratios and orbital characteristics. Second, gradient boosting decision trees and fully-connected neural networks are trained to map orbital evolution of space objects to the associated TLEs using 8 million publicly available TLEs from the US space catalog. The desired precision in the mapping to estimate a TLE is achieved for one of the three test cases, which is a low area-to-mass ratio space object.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="2.-Background">
+<a class="anchor" href="#2.-Background" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Background<a class="anchor-link" href="#2.-Background"> </a>
+</h2>
+<h3 id="2.1-Two-Line-Elements">
+<a class="anchor" href="#2.1-Two-Line-Elements" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 Two-Line Elements<a class="anchor-link" href="#2.1-Two-Line-Elements"> </a>
+</h3>
+<p>Two-line element sets (TLEs) and Simplified General Perturbations #4 (SGP4) are widely used for space operations to predict trajectories of space objects with moderate accuracy (tens of kilometers) for <strong>2-3 days</strong>. SGP4 provides the reference trajectory that is updated by fitting the actual trajectory, and TLEs are the updated parameters that approximate it. SGP4 includes zonal terms up to <strong>J5</strong> of the gravitational potential of the Earth, <strong>neutral atmosphere with exponential decay</strong> and <strong>partially modeled third-body mass interactions</strong>. Bstar ($B^{*}$) is an element of a TLE that determines the effect of air drag on the trajectories of the space objects. Table 1 shows the parameters of a TLE. However, it should be noted that TLE parameters are mean elements that are estimated by fitting the SGP4 trajectory and observed trajectory, and their values can drastically changed compared to the osculating elements at epoch.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th>Equations</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$B^{*}$</td>
+<td>$B^{*}$=$\frac{1}{2}\frac{C_{D}A}{m}\rho$</td>
+<td>Determines the effect of air drag on the trajectories</td>
+</tr>
+<tr>
+<td>$n$</td>
+<td>$n$=$\sqrt{\frac{\mu}{a^{3}}}$</td>
+<td>Defines the angular frequency of the orbit (shape of the orbit)</td>
+</tr>
+<tr>
+<td>$i$</td>
+<td>-</td>
+<td>Defines the orientation of the orbital plane with respect to the Earth</td>
+</tr>
+<tr>
+<td>$\Omega$</td>
+<td>-</td>
+<td>Defines the orientationof an orbit with respect to the $\hat{z}$ axis, which is parallel to the rotation axis of the Earth</td>
+</tr>
+<tr>
+<td>$\omega$</td>
+<td>-</td>
+<td>Defines the orientation of the orbital plane with respect to the Earth around the axis parallel to the angular momentum vector of the orbit</td>
+</tr>
+<tr>
+<td>$e$</td>
+<td>-</td>
+<td>Defines the shape of the orbit</td>
+</tr>
+<tr>
+<td>$m$</td>
+<td>-</td>
+<td>Defines the location of a space object in its orbit</td>
+</tr>
+</tbody>
+</table>
+<center>Table 1 : Parameters of a two-line element set.</center>
+<h3 id="2.2-Two-Line-Element-Estimation-Methods">
+<a class="anchor" href="#2.2-Two-Line-Element-Estimation-Methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 Two-Line Element Estimation Methods<a class="anchor-link" href="#2.2-Two-Line-Element-Estimation-Methods"> </a>
+</h3>
+<p>There are a few studies that investigate different approaches to estimate TLEs. As stated above, TLEs include the mean states estimated by fitting observations to the dynamics provided by SGP4, and they can only be used with SGP4 [1]. Keplerian orbital elements are used as initial estimates of TLEs by the differential corrections and nonlinear least squares methods [2]. Kalman filter is investigated to estimate TLEs using onboard Global Positioning System (GPS) data [3]. However, the above methods, which search for the local minimum of the objective function, which is the sum of the squares of the position and velocity errors, depend on the availability of a reasonable initial estimate of a TLE. Although methods, such as genetic algorithms [4] and invasive weed optimization [5], that do not require an initial estimate of the TLEs have been investigated, they are reported to be computationally intensive as they search for the global optimum. To summarize, the two main approaches in the literature to estimate a TLE use either computationally expensive global search or local search which depends on having an initial estimate. This represents a significant shortcoming in the current state-of-the-art of orbit determination using TLEs. The present work addresses this shortcoming.</p>
+<h3 id="2.3-Machine-Learning">
+<a class="anchor" href="#2.3-Machine-Learning" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.3 Machine Learning<a class="anchor-link" href="#2.3-Machine-Learning"> </a>
+</h3>
+<p>This work utilizes machine learning methods, namely the gradient boosting trees and fully-connected neural networks, to approximate the inverse mapping of publicly available SGP4 algorithm [1] for LEO objects by learning to map the orbital evolution to the associated TLE. The capability of approximating such mapping using machine learning will enable to represent time series orbital data in latent space that can be used with orbit propagators. The gradient boosting trees are machine learning models that are suitable for determining non-linear and sharp decision boundaries. The boosting is achieved by adding weak learners, such as decision trees, to determine the complex decision boundaries. The first successful application of such an idea is adaptive boosting (AdaBoost). AdaBoost generates a sequence of classifiers, and each classifier puts more weight on the samples that are not classified accurately in the previous iteration. Such an approach enables each classifier to capture different features in the input data, and more complex decision boundaries can be defined in the end. The boosting idea is further improved by defining the framework as a numerical optimization in the function space. The objective function is minimized by adding weak learners using the steepest-descent method.</p>
+<p>Artificial neural networks are machine learning models that are suitable for determining smooth nonlinear decision boundaries. According to the universal approximation theory [6], any Borel measurable function can be approximated by a feedforward neural network as long as it includes enough hidden units [7]. In addition, a neural network may also approximate any discrete function irrespective of its dimensions given that dimension is finite. Although the universal approximation theory states that any closed and bounded continuous function can be approximated by multilayer perceptrons, the training scheme to approximate that function might fail due to overfitting or failure of the optimization algorithm [7].</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="3.-Methods">
+<a class="anchor" href="#3.-Methods" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. Methods<a class="anchor-link" href="#3.-Methods"> </a>
+</h2>
+<h3 id="3.1-Monte-Carlo-approach">
+<a class="anchor" href="#3.1-Monte-Carlo-approach" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1 Monte-Carlo approach<a class="anchor-link" href="#3.1-Monte-Carlo-approach"> </a>
+</h3>
+<p>A Monte-Carlo approach that searches for the global minimum of the sum of the squares of the position and velocity errors to estimate a TLE without any initial data is presented. However, the proposed method is computationally intensive. Therefore, this work also investigates the feasibility of using machine learning to predict reasonable initial estimates of TLEs that can be utilized by the proposed Monte-Carlo approach. Figure 1 outlines the proposed method that extends the differential corrections method using the Monte-Carlo technique to estimate a TLE that satisfies a given criterion. The following procedure describes how to obtain such TLEs.</p>
+<p><img src="/blog/images/copied_from_nb/my_icons/monte_carlo_tle_.png" alt="Figure 1"></p>
+<center>Figure 1:The Monte-Carlo approach to estimate a TLE.</center>
+<p>The inner loop leverages the differential corrections to correct the initial parameters to fit the orbit using non-linear least squares method. The differential corrections scheme iteratively improves the sampled osculating TLE to match the position vector at the epoch time. The stopping criterion is selected as $10^{-8}$ and smaller for the magnitude of position error in kilometers. Equation below shows how a Jacobian matrix, which is computed by the finite-difference method, relates the change in the TLE to the change in the position and velocity vectors at the epoch.</p>
+\begin{equation}
+\label{eq:diffCorrection}
+\begin{split}
+\delta tle_{epoch} &amp;= \left(\frac{\partial f_{sgp4}}{\partial tle_{epoch}}\right)^{-1} \delta rv_{epoch}\\
+&amp;= (A_{t_{0}})^{-1} \delta b_{t_{0}}
+\end{split}
+\end{equation}<p>where $tle_{epoch}$ is the TLE parameters at the epoch, $f_{sgp4}$ is SGP4, $rv_{epoch}$ are the propagated position and velocity vectors at the epoch, $A_{t_{0}}$ is the Jacobian, and $\delta b_{t_{0}}$ is the residual at the epoch. Equation below shows the normal equation that relates all of the changes in the position and velocity vectors associated with the observational data available to the change in the TLE at epoch time [2]. In this work, all observational data are assumed to have the same weight, therefore, $W$ is assumed to be the identity matrix. Equation above is used for differential corrections in the inner loop and Equation below is used for differential corrections with nonlinear least squares method in the outer loop (Figure 1).</p>
+\begin{equation}
+\label{eq:diffCorrectionNonlinear}
+\begin{split}
+\delta tle_{epoch} &amp;= (A^{T}WA)^{-1}A^{T}Wb\\
+&amp;= \left(\sum_{i}^{N} A_{(t_{i})}^{T}A_{(t_{i})}\right)^{-1} \sum_{i}^{N} A_{(t_{i})}^{T}b_{(t_{i})}
+\end{split}
+\end{equation}<p>\noindent where $tle_{epoch}$ is the TLE parameters at the epoch, $f_{sgp4}$ is SGP4, $rv_{epoch}$ are the propagated position and velocity vectors at any time, $A_{t_{i}}$ is the Jacobian, and $\delta b_{t_{i}}$ is the residual at any time.</p>
+<h3 id="3.2-Machine-Learning-Assisted-Estimation">
+<a class="anchor" href="#3.2-Machine-Learning-Assisted-Estimation" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2 Machine Learning Assisted Estimation<a class="anchor-link" href="#3.2-Machine-Learning-Assisted-Estimation"> </a>
+</h3>
+<h4 id="3.2.1-Feature-Selection">
+<a class="anchor" href="#3.2.1-Feature-Selection" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.1 Feature Selection<a class="anchor-link" href="#3.2.1-Feature-Selection"> </a>
+</h4>
+<p>In the present work, Equinoctial orbital elements and a parameter that we shall call <em>instance</em> (Table 2) that defines the sequence of the data with fixed time interval are selected as feature vectors (input data for the machine learning models). The above orbital elements are non-singular, and the magnitude of their values are bounded, thus well-suited for the training process. The Keplerian mean motion, in radians per hour, replaces semi-major axis of the Equinoctial elements. The feature vectors are generated from 8,206,374 TLEs which are all LEO objects that have semi-major axes of 8,378 km and smaller in the space catalog. TLEs are restricted to the LEO orbital regime to ensure that all space objects are subject to a significant orbital perturbation due to atmospheric drag.</p>
+<p><img src="/blog/images/copied_from_nb/my_icons/feature_vectors_tle.png" alt="Figure 1"></p>
+<center>Figure 2: Feature vectors selected for the machine learning models.</center>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th>Equations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Instance</td>
+<td>[2.452, 2.402, ..., 0.049, 0.0]</td>
+</tr>
+<tr>
+<td>Mean motion (rad/h)</td>
+<td>$n = \sqrt{\frac{\mu}{a^{3}}}$ </td>
+</tr>
+<tr>
+<td>Ex</td>
+<td>$E_{x} = ecos(\omega+\Omega)$ </td>
+</tr>
+<tr>
+<td>Ey</td>
+<td>$E_{y} = esin(\omega+\Omega)$  </td>
+</tr>
+<tr>
+<td>Hx</td>
+<td>$H_{x} = tan(\frac{i}{2})cos(\Omega)$  </td>
+</tr>
+<tr>
+<td>Hy</td>
+<td>$H_{y} = tan(\frac{i}{2})sin(\Omega)$  </td>
+</tr>
+<tr>
+<td>Lv</td>
+<td>$Lv = \nu + \omega + \Omega$    </td>
+</tr>
+</tbody>
+</table>
+<center>Table 2 : Feature vectors selected for the machine learning models.</center>
+<h4 id="3.2.2-Boosting-Trees">
+<a class="anchor" href="#3.2.2-Boosting-Trees" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2 Boosting Trees<a class="anchor-link" href="#3.2.2-Boosting-Trees"> </a>
+</h4>
+<p>An optimized distributed gradient boosting library called XGBoost (version 0.7) is used for this work (Available at <a href="https://github.com/dmlc/xgboost">https://github.com/dmlc/xgboost</a>).  A gradient boosting tree model is trained for each element of a TLE, namely Bstar ($B^{*}$), eccentricity ($e$), inclination ($i$), mean anomaly ($m$), mean motion ($n$), right ascension of the ascending node ($\Omega$), and the argument of perigee ($\omega$). The construction of individual gradient boosting trees for each TLE parameter is chosen because they cannot map to a multidimensional output for regression problems due to the architecture of the decision trees, whereas neural networks can.</p>
+<p>Table 3 shows the gradient boosting tree hyperparameters that are optimized for training XGBoost models. The learning rate controls the step size for the gradient-based optimizer. The number of estimators controls the number of trees. The maximum depth limits the depth of each tree which is used to increase the complexity of the model. The minimum child weight is required to avoid overfitting of the training data. A node is split as long as the resultant split leads to a positive reduction in the loss function (mean square error in this work). Gamma can control the split of nodes. The rest of the parameters in Table 3 are used to avoid overfitting by forcing the model to be less complex. The hyperparameters of the gradient boosting trees are tuned empirically by considering the bias-variance tradeoff to ensure the trained models have generalization capability (Table 4). The grid search methods are not preferred because the models are trained with large amount of data.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th>$B^{*}$</th>
+<th>$i$</th>
+<th>$\Omega$</th>
+<th>$e$</th>
+<th>$\omega$</th>
+<th>$m$</th>
+<th>$n$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Learning rate</td>
+<td>0.1</td>
+<td>0.3</td>
+<td>0.3</td>
+<td>0.3</td>
+<td>0.2</td>
+<td>0.2</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td>No. of estimators</td>
+<td>100</td>
+<td>80</td>
+<td>70</td>
+<td>70</td>
+<td>80</td>
+<td>80</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Maximum depth</td>
+<td>20</td>
+<td>20</td>
+<td>20</td>
+<td>20</td>
+<td>25</td>
+<td>25</td>
+<td>25</td>
+</tr>
+<tr>
+<td>Min. child weight</td>
+<td>7</td>
+<td>9</td>
+<td>11</td>
+<td>13</td>
+<td>27</td>
+<td>27</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Gamma</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>0.7</td>
+<td>1.0</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Subsample</td>
+<td>0.7</td>
+<td>0.7</td>
+<td>0.6</td>
+<td>0.7</td>
+<td>0.1</td>
+<td>0.2</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>Col. sample by tree</td>
+<td>0.7</td>
+<td>0.8</td>
+<td>0.7</td>
+<td>0.7</td>
+<td>0.2</td>
+<td>0.3</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>Col. sample by level</td>
+<td>0.7</td>
+<td>0.8</td>
+<td>0.7</td>
+<td>0.7</td>
+<td>0.2</td>
+<td>0.3</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>Alpha</td>
+<td>0.2</td>
+<td>0.2</td>
+<td>0.2</td>
+<td>0.1</td>
+<td>0.9</td>
+<td>0.7</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+<center>Table 3 : Hyperparameters of XGBoost.</center>
+<table>
+<thead>
+<tr>
+<th>Models</th>
+<th>Training Squared Mean Error</th>
+<th>Test Squared Mean Error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$B^{*}$</td>
+<td>3.9e-5</td>
+<td>6.3e-5</td>
+</tr>
+<tr>
+<td>$i$</td>
+<td>7.1e-6</td>
+<td>2.1e-5</td>
+</tr>
+<tr>
+<td>$\Omega$</td>
+<td>3.5e-4</td>
+<td>2.9e-3 </td>
+</tr>
+<tr>
+<td>$e$</td>
+<td>1.6e-6</td>
+<td>1.3e-5 </td>
+</tr>
+<tr>
+<td>$\omega$</td>
+<td>0.21</td>
+<td>0.32</td>
+</tr>
+<tr>
+<td>$m$</td>
+<td>0.15</td>
+<td>0.26</td>
+</tr>
+<tr>
+<td>$n$</td>
+<td>9.8e-9</td>
+<td>2.2e-8</td>
+</tr>
+</tbody>
+</table>
+<center>Table 4 : Bias-Variance trade-off for XGBoost.</center>
+<h4 id="3.2.3-Deep-Learning">
+<a class="anchor" href="#3.2.3-Deep-Learning" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.3 Deep Learning<a class="anchor-link" href="#3.2.3-Deep-Learning"> </a>
+</h4>
+<p>Since neural networks can be trained with additional data without being trained from scratch, they are more versatile compared to other methods such as decision trees. In this paper, a fully-connected neural network architecture (Keras-version 2.2.0 using Tensorflow backend-version 1.8.0) is chosen to approximate the TLE estimation scheme (Figure 3). It should be noted that the inputs are standardized.</p>
+<p><img src="/blog/images/copied_from_nb/my_icons/nn_structure.png" alt="Figure 1"></p>
+<center>Figure 3: Fully-connected neural network architecture used for the work.</center>
+<p>Table 5 shows the hyperparameters of the fully-connected neural network that are optimized for neural network models. The Adam optimizer is chosen due to its computational efficiency for problems with large amount of data, and it computes the moving average of the gradients and squared gradients. The parameters of the Adam optimizer that control the decay rate of the moving averages <strong>{KA2015}</strong> are $\beta_{1}$ and $\beta_{2}$. The learning rate controls the step size for the Adam optimizer while the decay parameter decays the learning rate at each epoch. The hyperparameters of the fully-connected neural networks are tuned empirically by considering the bias-variance tradeoff to ensure the trained models have generalization capability (Table 6). The grid search methods are not preferred because the models are trained with large amount of data.</p>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th>$B^{*}$</th>
+<th>$i$</th>
+<th>$\Omega$</th>
+<th>$e$</th>
+<th>$\omega$</th>
+<th>$m$</th>
+<th>$n$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Learning rate</td>
+<td>9e-5</td>
+<td>9e-5</td>
+<td>9e-5</td>
+<td>9e-5</td>
+<td>9e-5</td>
+<td>9e-5</td>
+<td>1e-5</td>
+</tr>
+<tr>
+<td>Optimizer</td>
+<td>Adam</td>
+<td>Adam</td>
+<td>Adam</td>
+<td>Adam</td>
+<td>Adam</td>
+<td>Adam</td>
+<td>Adam</td>
+</tr>
+<tr>
+<td>$\beta_{1}$</td>
+<td>9e-4</td>
+<td>9e-4</td>
+<td>9e-4</td>
+<td>9e-4</td>
+<td>9e-4</td>
+<td>9e-4</td>
+<td>9e-4</td>
+</tr>
+<tr>
+<td>$\beta_{2}$</td>
+<td>999e-6</td>
+<td>999e-6</td>
+<td>999e-6</td>
+<td>999e-6</td>
+<td>999e-6</td>
+<td>999e-6</td>
+<td>999e-6</td>
+</tr>
+<tr>
+<td>Decay</td>
+<td>1e-07</td>
+<td>1e-07</td>
+<td>1e-07</td>
+<td>1e-07</td>
+<td>1e-07</td>
+<td>1e-07</td>
+<td>1e-07</td>
+</tr>
+<tr>
+<td>Epoch number</td>
+<td>50</td>
+<td>50</td>
+<td>50</td>
+<td>50</td>
+<td>50</td>
+<td>50</td>
+<td>50</td>
+</tr>
+</tbody>
+</table>
+<center>Table 5 : Hyperparameters of FC network.</center>
+<table>
+<thead>
+<tr>
+<th>Models</th>
+<th>Training Squared Mean Error</th>
+<th>Test Squared Mean Error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$B^{*}$</td>
+<td>1.4e-6</td>
+<td>2.4e-6</td>
+</tr>
+<tr>
+<td>$i$</td>
+<td>1.3e-4</td>
+<td>9.8e-5</td>
+</tr>
+<tr>
+<td>$\Omega$</td>
+<td>0.02</td>
+<td>0.01</td>
+</tr>
+<tr>
+<td>$e$</td>
+<td>1.8e-7</td>
+<td>2e-7</td>
+</tr>
+<tr>
+<td>$\omega$</td>
+<td>0.24</td>
+<td>0.22</td>
+</tr>
+<tr>
+<td>$m$</td>
+<td>0.2</td>
+<td>0.3</td>
+</tr>
+<tr>
+<td>$n$</td>
+<td>4.6e-9</td>
+<td>5.3e-9</td>
+</tr>
+</tbody>
+</table>
+<center>Table 6 : Bias-Variance trade-off for the FC network.</center>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="4.-Results">
+<a class="anchor" href="#4.-Results" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. Results<a class="anchor-link" href="#4.-Results"> </a>
+</h2>
+<h3 id="4.1-Monte-Carlo-Approach">
+<a class="anchor" href="#4.1-Monte-Carlo-Approach" aria-hidden="true"><span class="octicon octicon-link"></span></a>4.1 Monte-Carlo Approach<a class="anchor-link" href="#4.1-Monte-Carlo-Approach"> </a>
+</h3>
+<p>A novel approach to estimate a TLE from a given ephemeris without any initial estimate of the TLE using a Monte-Carlo method is introduced. Three particular cases with varying area-to-mass ratios, orbital characteristics and solar activity phases, where the standard differential corrections with the nonlinear least squares method <strong>{VC2008}</strong> cannot generate a valid TLE, are chosen as test cases. Initial orbital parameters for the test cases are propagated forward in time using a three-degree-of-freedom (3-DOF) numerical orbit propagator over 1 day. The orbital evolution is defined in the Vehicle Velocity, Local Horizontal (VVLH) reference frame (Figure 4).The perturbations included are: air drag (Harris-Priester model), the Earth's aspherical gravitational potential with order and degree 20 (Holmes-Featherstone model), solar radiation pressure (Lambertian sphere model), and Sun and Moon third-body gravitational perturbations. Parameters of the test cases used for the numerical propagation are given in Table 7.</p>
+<p><img src="/blog/images/copied_from_nb/my_icons/VVLH_frame.png" alt="Figure 1"></p>
+<center>Figure 4: The Vehicle Velocity, Local Horizontal (VVLH) reference frame.</center>
+<table>
+<thead>
+<tr>
+<th>Parameters</th>
+<th>Test case #1</th>
+<th>Test case #2</th>
+<th>Test case #3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Epoch (UTC)</td>
+<td>2018-12-12T18:47</td>
+<td>2014-01-15T10:37</td>
+<td>2009-08-03T15:18</td>
+</tr>
+<tr>
+<td>Period (min)</td>
+<td>$99.71$</td>
+<td>$94.65$</td>
+<td>$97.32$</td>
+</tr>
+<tr>
+<td>Mass (kg)</td>
+<td>$800$</td>
+<td>$3$</td>
+<td>$1$</td>
+</tr>
+<tr>
+<td>Area ($m^{2}$)</td>
+<td>$6$</td>
+<td>$0.03$</td>
+<td>$0.1$</td>
+</tr>
+<tr>
+<td>$n$ ($\frac{rad}{s}$)</td>
+<td>$0.00105$</td>
+<td>$0.001106$</td>
+<td>$0.001076$</td>
+</tr>
+<tr>
+<td>$i$ (deg)</td>
+<td>$101.45$</td>
+<td>$85.12$</td>
+<td>$97.60$</td>
+</tr>
+<tr>
+<td>$\Omega$ (deg)</td>
+<td>$53.03$</td>
+<td>$90.16$</td>
+<td>$253.29$</td>
+</tr>
+<tr>
+<td>$\omega$ (deg)</td>
+<td>$9.33$</td>
+<td>$204.08$</td>
+<td>$235.32$</td>
+</tr>
+<tr>
+<td>$m$ (deg)</td>
+<td>$359.44$</td>
+<td>$196.9$</td>
+<td>$178.81$</td>
+</tr>
+<tr>
+<td>$e$</td>
+<td>$0.022353$</td>
+<td>$0.011556$</td>
+<td>$0.025822$</td>
+</tr>
+<tr>
+<td>$C_{D}$</td>
+<td>$2.2$</td>
+<td>$1.5$</td>
+<td>$0.8$</td>
+</tr>
+</tbody>
+</table>
+<center>Table 7 : The parameters of the test cases used for the numerical propagator.</center>
+<p>Figure 4 shows the absolute relative distance between the numerically propagated orbit and the SGP4propagated orbit when the inner loop is satisfied for the test cases.</p>
+<p><img src="/blog/images/copied_from_nb/my_icons/keplerian_as_tle.png" alt="Figure 1"></p>
+<center>Figure 4: the absolute relative distances with respect to numerically propagated orbit when Keplerian elements are used as TLEs.</center>
+<p>Figure 5 shows the absolute relative distance between the numerically propagated orbit and the SGP4propagated orbit when the inner loop is satisfied for the test cases.</p>
+<p><img src="/blog/images/copied_from_nb/my_icons/inner_loop_satisfied.png" alt="Figure 1"></p>
+<center>Figure 5: Absolute relative distance between the numerically propagated orbit and the SGP4propagated orbit when the inner loop is satisfied.</center>
+<p>Figure 6 shows the absolute relative distance with respect to numerically propagated orbit when Kep-lerian elements are used as TLE for the test cases.</p>
+<p><img src="/blog/images/copied_from_nb/my_icons/tle_estimated_successfully_.png" alt="Figure 1"></p>
+<center>Figure 6: Absolute relative distance with respect to numerically propagated orbit when Kep-lerian elements are used as TLE.</center>
+<p>In conclusion, the present Monte-Carlo method can estimate a TLE without any initial estimate. Such capability is beneficial to space situational awareness (SSA) because TLEs are required for establishing first contact with the spacecraft during the Launch and Early Orbit Phase (LEOP). Most ground stations have propriety software that requires TLEs to track the satellites. Although the proposed method addresses the difficulty related to unavailability of the initial estimate, the inner loop is iterated 50 times on the average to find an initial estimate with desired precision. Therefore, the feasibility of using machine learning methods to generate initial estimates with the desired precision is investigated.</p>
+<h3 id="4.2-Machine-Learning-Assisted-TLE-Estimation">
+<a class="anchor" href="#4.2-Machine-Learning-Assisted-TLE-Estimation" aria-hidden="true"><span class="octicon octicon-link"></span></a>4.2 Machine Learning Assisted TLE Estimation<a class="anchor-link" href="#4.2-Machine-Learning-Assisted-TLE-Estimation"> </a>
+</h3>
+<p>The performances of machine learning methods differ based on the features selected. Two different machine learning models are trained to predict each mean elements of a TLE, and the best performing model is chosen to be validated by the errors in the orbital evolution. The error in the orbital evolution is computed by propagating TLEs estimated by the selected best machine learning models and the associated CSpOC TLEs backward in time using SGP4 for 50 orbital periods. Table 8 summarizes the best performing models for each mean element that are discussed in detail above.</p>
+<table>
+<thead>
+<tr>
+<th>Mean elements</th>
+<th>Best machine learning models </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$B^{*}$</td>
+<td>Gradient boosting trees</td>
+</tr>
+<tr>
+<td>$n$</td>
+<td>Fully-connected neural network (unless the absolute residual between two models are larger than 0.0002 rad/min for values of $n$ between 0.053 rad/min and 0.067 rad/min)</td>
+</tr>
+<tr>
+<td>$i$</td>
+<td>Gradient boosting trees (unless the absolute residual between two models are larger than 0.014 rad)</td>
+</tr>
+<tr>
+<td>$\Omega$</td>
+<td>Gradient boosting trees</td>
+</tr>
+<tr>
+<td>$\omega$</td>
+<td>Gradient boosting trees</td>
+</tr>
+<tr>
+<td>$m$</td>
+<td>Fully-connected neural network</td>
+</tr>
+<tr>
+<td>$e$</td>
+<td>Fully-connected neural network</td>
+</tr>
+</tbody>
+</table>
+<center>Table 8 : Best machine learning models for predicting mean elements of a TLE.</center>
+<p>Figure 7 shows the absolute  relative  distances  with  respect  to  numerically  propagated  orbits  when TLEs estimated by machine learning models are used for the test cases.</p>
+<p><img src="/blog/images/copied_from_nb/my_icons/direct_ml_prediction.png" alt="Figure 1"></p>
+<center>Figure 7: Absolute  relative  distances  with  respect  to  numerically  propagated  orbits  when TLEs estimated by machine learning models are used.</center>
+<p>Figure 8 shows the absolute  relative  distances  between  the  numerically  propagated  orbits  and  the SGP4 propagated orbits when the initial estimates that are computed by the machine learning models are improved by nonlinear least squares with differential corrections method for the test cases.</p>
+<p><img src="/blog/images/copied_from_nb/my_icons/machine_assisted_tle.png" alt="Figure 1"></p>
+<center>Figure 8: Absolute  relative  distances  between  the  numerically  propagated  orbits  and  the SGP4 propagated orbits when the initial estimates that are computed by the machine learning models are improved by nonlinear least squares with differential corrections method.</center>
+<p>In conclusion, the present best machine learning models (selected based ontheir performance) that are trained with TLEs obtained from the official US Space Catalog have the potential to provide an initial estimate to estimate a TLE with desired precision. The inner loop, which searches for the global minimum by using brute force approach, in the Monte-Carlo TLE estimation method can be replaced by machine learning models because there isno secular error growth in the orbital evolution of TLEs predicted by machine learning models (test case #1). Therefore, the standard differential corrections with nonlinear least squares method can converge to a local minimum, and the computation time can be reduced significantly.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="5.-References">
+<a class="anchor" href="#5.-References" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. References<a class="anchor-link" href="#5.-References"> </a>
+</h2>
+<p>[1] Vallado, D., Crawford, P., Hujsak, R. and Kelso, T.S., 2006, August. Revisiting spacetrack report# 3. In AIAA/AAS Astrodynamics Specialist Conference and Exhibit (p. 6753).</p>
+<p>[2] Vallado, D. and Crawford, P., 2008, August. SGP4 orbit determination. In AIAA/AAS Astrodynamics Specialist Conference and Exhibit (p. 6770).</p>
+<p>[3] Montenbruck, O. and Gill, E., 2000, June. Real-Time estimation of SGP4 orbital elements from GPS navigation data. In International Symposium Space Flight Dynamics (pp. 26-30). Biarritz, France.</p>
+<p>[4] Goh, S.T. and Low, K.S., 2018, March. Real-time estimation of satellite's two-line elements via positioning data. In 2018 IEEE Aerospace Conference (pp. 1-7). IEEE.</p>
+<p>[5] Bolandi, H., Ashtari Larki, M.H., Sedighy, S.H., Zeighami, M.S. and Esmailzadeh, M., 2015. Estimation of Simplified General Perturbations model 4 orbital elements from global positioning system data by invasive weed optimization algorithm. Proceedings of the Institution of Mechanical Engineers, Part G: Journal of Aerospace Engineering, 229(8), pp.1384-1394.</p>
+<p>[6] Cybenko, G., 1989. Approximation by superpositions of a sigmoidal function. Mathematics of control, signals and systems, 2(4), pp.303-314.</p>
+<p>[7] Goodfellow, I., Bengio, Y. and Courville, A., 2016. Deep learning. MIT press.</p>
+<p>[8] Kingma, D.P. and Ba, J., 2014. Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="6.-Code">
+<a class="anchor" href="#6.-Code" aria-hidden="true"><span class="octicon octicon-link"></span></a>6. Code<a class="anchor-link" href="#6.-Code"> </a>
+</h2>
+<p>Since the codes used to generate this research includes different components, codes are not shared in the blog post. Please contact me for the source code.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="rasitabay/blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/blog/two-line%20elements/mean%20elements/tle/estimation/machine%20learning/2020/04/20/two-line-elemets-machine-learning.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Blog posts related to data scienece and machine learning for real life.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/rasitabay" title="rasitabay"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/abayrasit" title="abayrasit"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
